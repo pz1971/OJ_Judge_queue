@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import mongoTriggers from "mongo-triggers";
 
 const Schema = mongoose.Schema;
 
