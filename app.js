@@ -64,12 +64,13 @@ await judgeQueue.add( { filename: './OJ/solution.cpp' } );
 console.log('hello');
 
 // consumer
-judgeQueue.process(async (job) => {
+const judge = judgeQueue.process(async (job) => {
     // assignCpu = (assignCpu + 1) % 4;
     // // wait until lock[assignCpu] = 0
     // while(lock[assignCpu] == 1) {
     //     await sleep(100);
     // }
-    // return await judgeCpp(job.data.filename, 3, 10000, assignCpu);
-    console.log('hello')
+    return judgeCpp(job.data.filename, 3, 10000, assignCpu);
   });
+
+await judge();
