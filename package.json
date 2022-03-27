@@ -1,0 +1,27 @@
+{
+  "name": "oj_judge_queue",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pz1971/OJ_Judge_queue.git"
+  },
+  "author": "Parvez Mia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pz1971/OJ_Judge_queue/issues"
+  },
+  "homepage": "https://github.com/pz1971/OJ_Judge_queue#readme",
+  "dependencies": {
+    "child-process": "^1.0.2",
+    "express": "^4.17.3",
+    "fs": "^0.0.1-security",
+    "mongoose": "^6.2.8",
+    "nodemon": "^2.0.15"
+  }
+}
