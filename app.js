@@ -35,7 +35,7 @@ const startJudging = async () => {
             await new Promise(resolve => setTimeout(resolve, 100));
         }
         // judge the submission
-        await judgeCpp(submission.source, cpu);
+        await judgeCpp(submission.source, 3, 10240, cpu);
         console.log(`judging: ${submission.source}`);
         // release cpu core
         lock[cpu] = 0;
@@ -46,9 +46,11 @@ const startJudging = async () => {
 }
 
 createSubmission('./OJ/solution.cpp');
-createSubmission('./OJ/WA_solution.cpp');
-createSubmission('./OJ/TLE_solution.cpp');
-createSubmission('./OJ/MLE_solution.cpp');
+// createSubmission('./OJ/WA_solution.cpp');
+// createSubmission('./OJ/TLE_solution.cpp');
+// createSubmission('./OJ/MLE_solution.cpp');
+
+// await judgeCpp('./OJ/solution.cpp', 3, 10240, 1);
 
 
 // // cpu core lock flag
