@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/pz1971/OJ_Judge_queue#readme",
   "dependencies": {
+    "bee-queue": "^1.4.0",
     "bull": "^4.8.1",
     "child-process": "^1.0.2",
     "express": "^4.17.3",
