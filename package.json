@@ -18,10 +18,8 @@
   },
   "homepage": "https://github.com/pz1971/OJ_Judge_queue#readme",
   "dependencies": {
-    "bee-queue": "^1.4.0",
-    "bull": "^4.8.1",
+    "async-mutex": "^0.3.2",
     "child-process": "^1.0.2",
-    "express": "^4.17.3",
     "fs": "^0.0.1-security",
     "mongoose": "^6.2.8",
     "nodemon": "^2.0.15"

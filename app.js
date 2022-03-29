@@ -3,52 +3,62 @@ import './env.js';
 import Submission from './models/submission.js';
 import  './judge.js';
 import judgeCpp from './judge.js';
+import {Mutex} from 'async-mutex';
 
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true, useUnifiedTopology: true
 })
 
-// cpu core lock flag
-var lock = [0, 0, 0, 0];
+const cpu0 = new Mutex();
+const cpu1 = new Mutex();
+const cpu2 = new Mutex();
+const cpu3 = new Mutex();
+
+var assignCpu = 0;
 
 const createSubmission = async (filename) => {
     await Submission.create({source:filename, status: 'on_queue'});
     console.log("submission created");
-    await startJudging();
+    startJudging();
 }
 
 const startJudging = async () => {
     // find and modify one document from the collection with status on_queue
     const submission = await Submission.findOneAndUpdate({status: 'on_queue'}, {status: 'judging'}, {new: true});
-    if (submission) {
-        // console.log("submission found");
-        // assign cpu core
-        var cpu = 0;
-        while (1) {
-            if (lock[cpu] == 0) {
-                lock[cpu] = 1;
-                break;
-            } else {
-                cpu = (cpu + 1) % 4;
-            }
-            // sleep for 100ms
-            await new Promise(resolve => setTimeout(resolve, 100));
-        }
-        // judge the submission
-        await judgeCpp(submission.source, 3, 10240, cpu);
-        console.log(`judging: ${submission.source}`);
-        // release cpu core
-        lock[cpu] = 0;
-        // update the status of the submission
-        var x = await Submission.findOneAndUpdate({source: submission.source}, {status: 'AC'}, {new: true});
-        console.log(`submission ${x.source} is AC`);
+    if (!submission)
+        return;
+    assignCpu = (assignCpu + 1) % 4;
+
+    if (assignCpu == 0) {
+        await cpu0.runExclusive(async () => {
+            // judge the submission
+            await judgeCpp(submission.source, 3, 10240, 0);
+        });
+    }
+    else if (assignCpu == 1) {
+        await cpu1.runExclusive(async () => {
+            // judge the submission
+            await judgeCpp(submission.source, 3, 10240, 1);
+        });
+    }
+    else if (assignCpu == 2) {
+        await cpu2.runExclusive(async () => {
+            // judge the submission
+            await judgeCpp(submission.source, 3, 10240, 2);
+        });
+    }
+    else if (assignCpu == 3) {
+        await cpu3.runExclusive(async () => {
+            // judge the submission
+            await judgeCpp(submission.source, 3, 10240, 3);
+        });
     }
 }
 
 createSubmission('./OJ/solution.cpp');
-// createSubmission('./OJ/WA_solution.cpp');
-// createSubmission('./OJ/TLE_solution.cpp');
-// createSubmission('./OJ/MLE_solution.cpp');
+createSubmission('./OJ/WA_solution.cpp');
+createSubmission('./OJ/TLE_solution.cpp');
+createSubmission('./OJ/MLE_solution.cpp');
 
 // await judgeCpp('./OJ/solution.cpp', 3, 10240, 1);
 
